@@ -18,6 +18,7 @@ optional arguments:
 ```
 
 ## Methods
+
 ### searchType
 searchType is the way the dictionary of playtime is keyed. Anytime searchType is mentioned, 'trackName' or 'artistName' are the possible inputs.   
 'trackName' gathers playtime by song and 'artistName' gathers playtime by artist.   
@@ -27,7 +28,7 @@ searchType is the way the dictionary of playtime is keyed. Anytime searchType is
 create_playtime_dict(path: str, searchType: str)
 ```
 Creates dictionary of playtime in minutes, keyed by artist or song depending on 'searchType' ('trackName' or 'artistName').  
-Requires a searchType ('trackName' or 'artistName') and the path to the folder containing the StreamingHistoryX.json files.   
+Requires a searchType ('trackName' or 'artistName') and the path to the folder containing the *StreamingHistoryX.json* files.   
 
 ### create_csv()
 ```
