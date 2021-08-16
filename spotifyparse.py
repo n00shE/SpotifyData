@@ -1,3 +1,10 @@
+"""
+Ryan Blanchard
+rmblanch@uci.edu
+Spotify data download parser
+"""
+
+
 import json
 import argparse
 import csv
@@ -6,6 +13,13 @@ import os
 #import time
 
 def create_playtime_dict(path: str, searchType: str):
+    '''
+    Creates dictionary of playtime in minutes, keyed by artist or song depending on 'searchType' ('trackName' or 'artistName').  
+    Requires a search type ('trackName' or 'artistName') and the path to the folder containing the StreamingHistoryX.json files.  
+    '''
+    if searchType != 'trackName' and searchType != 'artistName':
+        print("ERROR: Invalid search type.")
+        quit()
     playtime = {}
     for jsonFile in os.scandir(path):
         if "StreamingHistory" in jsonFile.path:
