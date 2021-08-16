@@ -1,5 +1,9 @@
 ﻿# SpotifyData
  
+## Prerequisites
+You must download your data package from Spotify, this can take 1-3 weeks.   
+https://www.spotify.com/us/account/privacy/
+ 
 ## Usage
 ```
 usage: spotifyparse.py [-h] [-s] [-o OUTFILE] [-p] path
