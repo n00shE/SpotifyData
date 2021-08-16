@@ -1,7 +1,7 @@
 ﻿# SpotifyData
  
 ## Prerequisites
-You must download your data package from Spotify, this can take 1-3 weeks.   
+You must download your data package from Spotify, this can take 1-3 weeks for Spotify to deliver.   
 https://www.spotify.com/us/account/privacy/
  
 ## Usage
