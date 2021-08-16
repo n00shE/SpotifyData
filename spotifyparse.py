@@ -8,7 +8,6 @@ Spotify data download parser
 import json
 import argparse
 import csv
-import matplotlib.pyplot as plt
 import os
 #import time
 
@@ -29,12 +28,16 @@ def create_playtime_dict(path: str, searchType: str):
                 for song in songList:
                     #if '$' in song[searchType]: continue
                     try:
-                        playtime[song[searchType]] += song['msPlayed'] / 60000
+                        playtime[song[searchType]] += song['msPlayed'] / 60000 # divided to convert ms to minutes.
                     except KeyError:
                         playtime[song[searchType]] = song['msPlayed'] / 60000
     return dict(sorted(playtime.items(), key=lambda item: item[1], reverse=True))
 
 def create_csv(playtime: dict, searchType: str, file: str):
+    '''
+    Creates csv with 'searchType' and playtime (in minutes) columns.
+    Requires a playtime dictionary (gathered from create_playtime_dict()), a searchType (see above), and the file name/relative path to save CSV.
+    '''
     file = "out.csv"
     with open(file, 'w', newline="\n", encoding="utf8") as csv_file:
         writer = csv.writer(csv_file)
@@ -44,6 +47,11 @@ def create_csv(playtime: dict, searchType: str, file: str):
     print(f'Finished writing csv file to: {file}')
 
 def plot_data(playtime: dict, searchType: str):
+    '''
+    Plots top 20 with matplotlib.
+    Requires a playtime dictionary and a searchType (see above).
+    '''
+    import matplotlib.pyplot as plt
     l = dict(list(playtime.items())[:20])
     #print(l)
     plt.style.use('ggplot')
