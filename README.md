@@ -1,7 +1,7 @@
 ﻿# SpotifyData
  
 ## Prerequisites
-You must download your data package from Spotify, this can take 1-4 weeks for Spotify to deliver.   
+You must download your data package from Spotify, this can take 1-4 weeks to deliver.   
 This program supports both the account data download and the extended history download.   
 https://www.spotify.com/us/account/privacy/
  
@@ -27,17 +27,19 @@ optional arguments:
                         Number of items to plot
 ```
 
+If you downloaded the extended stream history data, be sure to use the *-e* option.
+
 ## SpotifyData Class
 ```
 SpotifyData(path: str, searchType: str, extended=False, includePodcasts=False, darkMode=False)
 ```
 The class requires two arguments with three optionals.   
-Class must be instantiated before using the methods below.    
+The class must be instantiated before using the methods below.    
 ### Required Arguments
 The path to the folder with the *StreamingHistoryX.json* files or the the *endsong_X.json* files.   
 The search type which is either *'trackName'* or *'artistName'*.   
 ### Optional Arguments
-Boolean if the data is from the extended streaming history download.  (The defualt is the account data download)   
+Boolean if the data is from the extended streaming history download. (The default is the account data download)   
 Boolean to include podcasts. (Only works with the extended stream history)   
 Boolean to make the chart dark mode.   
 
