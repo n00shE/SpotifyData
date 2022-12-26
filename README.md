@@ -7,7 +7,7 @@ https://www.spotify.com/us/account/privacy/
  
 ## Usage
 ```
-usage: spotifyparse.py [-h] [-s] [-e] [-i] [-o OUTFILE] [-d] [-n PLOTNUM] path
+usage: spotifyparse.py [-h] [-s] [-e] [-i] [-o OUTFILE] [-d] [-n PLOTNUM] [--start-date STARTDATE] [--end-date ENDDATE] path
 
 Parses and charts Spotify data downloads
 
@@ -17,7 +17,7 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -s, --song            Gather by song instead of artist
-  -e, --extended        Use the lifetime streaming history files
+  -e, --extended        Use the extended streaming history files
   -i, --include-podcasts
                         Include podcast data, only works on extended data
   -o OUTFILE, --outfile OUTFILE
@@ -25,6 +25,9 @@ optional arguments:
   -d, --dark-mode       Plot with a dark background
   -n PLOTNUM, --plot-num PLOTNUM
                         Number of items to plot
+  --start-date STARTDATE
+                        Don't include any streaming data before this date. Format: MM-DD-YYYY
+  --end-date ENDDATE    Don't include any streaming data after this date. Format: MM-DD-YYYY
 ```
 
 If you downloaded the extended stream history data, be sure to use the *-e* option.
