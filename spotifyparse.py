@@ -61,7 +61,8 @@ class SpotifyData:
                 with open(jsonFile.path, encoding="utf8") as file:
                     songList = json.load(file)
                 for song in songList:
-                    date = datetime.strptime(song['ts'], '%Y-%m-%dT%H:%M:%SZ')
+                    #date = datetime.strptime(song['ts'], '%Y-%m-%dT%H:%M:%SZ')
+                    date = datetime.utcfromtimestamp(song['offline_timestamp']//1000)
                     if not self.within_date_range(date):
                         continue
                     self.find_date_range(date)
