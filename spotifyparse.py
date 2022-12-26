@@ -12,13 +12,15 @@ from collections import OrderedDict, defaultdict
 from itertools import islice
 
 class SpotifyData:
-    def __init__(self, path: str, searchType: str, extended=False, includePodcasts=False, darkMode=False):
+    def __init__(self, path: str, searchType: str, extended=False, includePodcasts=False, darkMode=False, startDate=None, endDate=None):
         self.path = path
         self.searchType = searchType
         self.friendlySearchType = searchType
         self.extended = extended
         self.includePodcasts = includePodcasts
         self.darkMode = darkMode
+        self.startDate = startDate
+        self.endDate = endDate
         self.playtime = None
         self.newest = None
         self.oldest = None
@@ -59,7 +61,10 @@ class SpotifyData:
                 with open(jsonFile.path, encoding="utf8") as file:
                     songList = json.load(file)
                 for song in songList:
-                    self.find_date_range(song['ts'])
+                    date = datetime.strptime(song['ts'], '%Y-%m-%dT%H:%M:%SZ')
+                    if not self.within_date_range(date):
+                        continue
+                    self.find_date_range(date)
                     if song[self.searchType] == None:
                         if self.includePodcasts:
                             if self.friendlySearchType == 'artistName':
@@ -85,7 +90,10 @@ class SpotifyData:
                 with open(jsonFile.path, encoding="utf8") as file:
                     songList = json.load(file)
                 for song in songList:
-                    self.find_date_range(song['endTime'])
+                    date = datetime.strptime(song['endTime'], '%Y-%m-%d %H:%M')
+                    if not self.within_date_range(date):
+                        continue
+                    self.find_date_range(date)
                     #if '$' in song[self.searchType]: continue
                     self.playtime[song[self.searchType]] += song['msPlayed'] / 60000 # divided to convert ms to minutes.
         if files == 0:
@@ -93,15 +101,17 @@ class SpotifyData:
         else:
             print(f"Processed {files} files.")
 
-    def find_date_range(self, time: str):
+    def within_date_range(self, date: datetime) -> bool:
+        if self.startDate and date < startDate:
+            return False
+        if self.endDate and date > self.endDate:
+            return False
+        return True
+
+    def find_date_range(self, date: datetime):
         '''
         Find the date range of the dataset
         '''
-        if self.extended:
-            date = datetime.strptime(time, '%Y-%m-%dT%H:%M:%SZ')
-        else:
-            date = datetime.strptime(time, '%Y-%m-%d %H:%M')
-        
         if not self.oldest or date < self.oldest:
             self.oldest = date
         if not self.newest or date > self.newest:
@@ -167,16 +177,35 @@ if __name__ == '__main__':
     parser.add_argument('-o','--outfile', action='store', default=None, help="Saves csv in current directory with specified name")
     parser.add_argument('-d','--dark-mode', action='store_true', help="Plot with a dark background", dest='darkMode')
     parser.add_argument('-n','--plot-num', action='store', help="Number of items to plot", dest='plotNum', default=20, type=int)
+    parser.add_argument('--start-date', action='store', help="Don't include any streaming data before this date. Format: MM-DD-YYYY", dest='startDate')
+    parser.add_argument('--end-date', action='store', help="Don't include any streaming data after this date. Format: MM-DD-YYYY", dest='endDate')
 
     #subparsers = parser.add_subparsers(help='subplot')
     args = parser.parse_args()
     if args.includePodcasts and not args.extended:
         parser.error("Podcasts cannot be included or excluded unless using extended data")
+
+    startDate = args.startDate
+    endDate = args.endDate
+    if args.startDate:
+        try:
+            startDate = datetime.strptime(args.startDate, '%m-%d-%Y')
+        except ValueError:
+            parser.error("Invalid start date format, should be MM-DD-YYYY")
+    if args.endDate:
+        try:
+            endDate = datetime.strptime(args.endDate, '%m-%d-%Y')
+        except ValueError:
+            parser.error("Invalid end date format, should be MM-DD-YYYY")
+    if startDate and endDate and not endDate > startDate:
+        parser.error("End date is not greater than start date.")
+
     if args.song:
         searchType = 'trackName'
     else:
         searchType = 'artistName'
-    sd = SpotifyData(args.path, searchType, args.extended, args.includePodcasts, args.darkMode)
+
+    sd = SpotifyData(args.path, searchType, args.extended, args.includePodcasts, args.darkMode, startDate, endDate)
     if args.outfile:
         sd.create_csv(args.outfile)
     sd.plot_data(args.plotNum)
